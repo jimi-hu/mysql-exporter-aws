@@ -10,14 +10,23 @@ import (
 	"time"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/HarveyJie/mysql-exporter-aws/metrics"
+	"github.com/Unknwon/goconfig"
 
 )
 
 
 func mysqlMetrics(){
+    cfg,err:=goconfig.LoadConfigFile("conf.ini")
+    if err != nil{
+    	panic("读取conf.ini失败")
+	}
+    region,err := cfg.GetValue("common","db_region")
+    if err != nil{
+    	panic("读取aws region配置失败")
+	}
 	go func() {
 		for {
-            allDB ,_:= resources.ListRDS()
+            allDB ,_:= resources.ListRDS(region)
             startTime:=time.Now()
             endTime:=startTime.Add(-time.Second*60)
             for _,v := range allDB.DBInstances {
