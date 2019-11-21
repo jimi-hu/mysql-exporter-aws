@@ -16,20 +16,14 @@ import (
 )
 
 
-func mysqlMetrics(config_file string){
-    cfg,err:=goconfig.LoadConfigFile(config_file)
-    if err != nil{
-    	panic("读取conf.ini失败")
-	}
-    region,err := cfg.GetValue("common","db_region")
-    if err != nil{
-    	panic("读取aws region配置失败")
-	}
+func mysqlMetrics(region string){
+
 	go func() {
 		for {
             allDB ,_:= resources.ListRDS(region)
             startTime:=time.Now()
             endTime:=startTime.Add(-time.Second*60)
+
             for _,v := range allDB.DBInstances {
 				if(*v.DBInstanceStatus !="available"){
 					continue
@@ -43,7 +37,6 @@ func mysqlMetrics(config_file string){
 						metrics.MysqlConn.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
 					}
 				}
-
 				result,err=monitor.RdsCPUUsagFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
 				if(err!=nil){
 					fmt.Println(err)
@@ -131,7 +124,18 @@ func main() {
 	flag.StringVar(&config_file,"c","","配置文件完整路径")
 	flag.Parse()
 
-	mysqlMetrics(config_file)
+
+	cfg,err:=goconfig.LoadConfigFile(config_file)
+	if err != nil{
+		panic("读取conf.ini失败")
+	}
+	region,err := cfg.GetValue("common","db_region")
+	if err != nil{
+		panic("读取aws region配置失败")
+		}
+
+    monitor.InitCloudWatchClient(region)
+	mysqlMetrics(region)
 
 	http.Handle("/metrics", promhttp.Handler())
 	http.ListenAndServe(":8080", nil)
