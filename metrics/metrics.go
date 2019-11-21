@@ -69,5 +69,11 @@ var (
 	},
 		[]string{"db_name"},
 	)
+	MysqlFreeDisk= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_free_disk",
+		Help: "mysql空闲磁盘大小 (Bytes)",
+	},
+		[]string{"db_name"},
+	)
 
 )

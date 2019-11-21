@@ -109,6 +109,15 @@ func mysqlMetrics(region string){
 						metrics.MysqlWriteLatency.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
 					}
 				}
+
+				result,err=monitor.RdsFreeDiskFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlFreeDisk.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
 			}
 
 
