@@ -11,12 +11,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/HarveyJie/mysql-exporter-aws/metrics"
 	"github.com/Unknwon/goconfig"
+	"flag"
 
 )
 
 
-func mysqlMetrics(){
-    cfg,err:=goconfig.LoadConfigFile("conf.ini")
+func mysqlMetrics(config_file string){
+    cfg,err:=goconfig.LoadConfigFile(config_file)
     if err != nil{
     	panic("读取conf.ini失败")
 	}
@@ -126,7 +127,11 @@ func mysqlMetrics(){
 
 
 func main() {
-	mysqlMetrics()
+	var config_file string
+	flag.StringVar(&config_file,"c","","配置文件完整路径")
+	flag.Parse()
+
+	mysqlMetrics(config_file)
 
 	http.Handle("/metrics", promhttp.Handler())
 	http.ListenAndServe(":8080", nil)
