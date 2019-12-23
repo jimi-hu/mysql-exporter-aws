@@ -118,6 +118,51 @@ func mysqlMetrics(region string){
 						metrics.MysqlFreeDisk.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
 					}
 				}
+
+				result,err=monitor.RdsDiskQueueDepthFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlDiskQueueDepth.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
+
+				result,err=monitor.RdsWriteThroughputFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlWriteThroughput.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
+
+				result,err=monitor.RdsReadThroughputFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlReadThroughput.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
+
+				result,err=monitor.RdsSwapUsageFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlSwapUsage.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
+
+				result,err=monitor.RdsBinLogDiskUsageFilterDBName(startTime,endTime,*v.DBInstanceIdentifier)
+				if(err!=nil){
+					fmt.Println(err)
+				}else {
+					if(len(result.Datapoints) > 0 ) {
+						metrics.MysqlBinLogDiskUsage.WithLabelValues(*v.DBInstanceIdentifier).Set(*result.Datapoints[0].Average)
+					}
+				}
 			}
 
 

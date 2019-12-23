@@ -75,5 +75,37 @@ var (
 	},
 		[]string{"db_name"},
 	)
+	MysqlDiskQueueDepth= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_disk_queue_depth",
+		Help: "mysql队列深度",
+	},
+		[]string{"db_name"},
+	)
+	MysqlWriteThroughput= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_write_throughput",
+		Help: "mysql写入吞吐 (Bytes/秒)",
+	},
+		[]string{"db_name"},
+	)
+	MysqlReadThroughput= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_write_throughput",
+		Help: "mysql读取吞吐 (Bytes/秒)",
+	},
+		[]string{"db_name"},
+	)
+	MysqlSwapUsage= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_swap_usage",
+		Help: "mysql交换分区使用 (Bytes)",
+	},
+		[]string{"db_name"},
+	)
+	MysqlBinLogDiskUsage= promauto.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "mysql_binlog_disk_usage",
+		Help: "mysql二进制日志使用大小 (Bytes)",
+	},
+		[]string{"db_name"},
+	)
+
+
 
 )
