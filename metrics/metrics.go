@@ -88,7 +88,7 @@ var (
 		[]string{"db_name"},
 	)
 	MysqlReadThroughput= promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "mysql_write_throughput",
+		Name: "mysql_read_throughput",
 		Help: "mysql读取吞吐 (Bytes/秒)",
 	},
 		[]string{"db_name"},
